@@ -1,0 +1,15 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        SPEECH_KEY: ${SPEECH_KEY}
+        SPEECH_REGION: ${SPEECH_REGION}
+    ports:
+      - "3000:3000"
+    environment:
+      SPEECH_KEY: ${SPEECH_KEY}
+      SPEECH_REGION: ${SPEECH_REGION}
