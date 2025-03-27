@@ -1,0 +1,204 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model LocationAnalytic {
+  hashIP    String @id
+  country   String
+  city      String
+  analyticEvents AnalyticEvent[]
+}
+
+model AnalyticEvent {
+  id        String   @id @default(uuid())
+  pseudoId  String
+  hashIP    String
+  locationAnalytic LocationAnalytic @relation(fields: [hashIP], references: [hashIP])
+  referer   String
+  userId    String?
+  userPublicProfile      UserPublicProfile?    @relation(fields: [userId], references: [id])
+  event     String
+  timestamp DateTime @default(now())
+  details   Json?
+
+  @@index([userId])
+  @@index([event])
+  @@map("analytics")
+}
+
+model Event {
+  id     String  @id @default(uuid())
+  title   String
+  description String
+  scheduledAtUTC DateTime
+  registeredUserPublicProfiles   UserPublicProfile[] @relation("RegisteredEvents")
+  guests      Guest[]
+  joinedUserPublicProfiles UserPublicProfile[] @relation("JoinedEvents")
+  questions Question[] @relation("QuestionFromEvent")
+  tags       Tag[] 
+}
+
+model Tag {
+  id   String @id
+  events Event[]
+  links Link[]
+}
+
+model Guest {
+  userPublicProfileId String
+  userPublicProfile UserPublicProfile @relation(fields: [userPublicProfileId], references: [id])
+  eventId String
+  event Event @relation(fields: [eventId], references: [id])
+  presentationOrder Int
+  @@id([userPublicProfileId, eventId])
+}
+
+model Question {
+  id     String  @id @default(uuid())
+  question String
+  event     Event    @relation("QuestionFromEvent", fields: [eventId], references: [id])
+  eventId   String
+  askedByUserPublicProfile UserPublicProfile @relation("QuestionAskedByUserPublicProfile", fields: [askedByUserPublicProfileId], references: [id])
+  askedByUserPublicProfileId String
+  votedByUserPublicProfiles UserPublicProfile[] @relation("QuestionVotedByUserPublicProfile")
+  answers Answer[]
+  askedAtUTC DateTime
+  validated Boolean
+}
+
+model Answer {
+  id     String  @id @default(uuid())
+  answeredByUserPublicProfileId String
+  answeredByUserPublicProfile  UserPublicProfile @relation(fields:[answeredByUserPublicProfileId], references: [id])
+  questionId  String
+  question Question @relation(fields:[questionId], references: [id])
+  answeredAtUTC DateTime
+  answer String
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+
+  publicProfile     UserPublicProfile?
+
+  @@unique([email])
+  @@unique([name])
+  @@unique([id, name])
+  @@map("user")
+}
+
+model UserPublicProfile {
+  id    String @id
+  user      User   @relation(fields: [id, name], references: [id, name])
+  name      String 
+  linkedinUrl   String?
+  twitterUrl    String?
+  githubUrl     String?
+  youtubeUrl    String?
+  position      String?
+  organizationName    String?
+  organizationUrl    String?
+  bio   String?
+  personalWebsite String?
+  pictureUrl    String?
+  registeredEvents        Event[] @relation("RegisteredEvents")
+  joinedEvents  Event[] @relation("JoinedEvents")
+  questionsAsked Question[] @relation("QuestionAskedByUserPublicProfile")
+  questionsVoted Question[] @relation("QuestionVotedByUserPublicProfile")
+  answersProvided Answer[]
+  analyticEvents       AnalyticEvent[]
+  linksVoted LinkVote[]
+  linksSubmitted Link[] @relation("LinkSubmittedByUserPublicProfiles")
+  guests  Guest[]
+
+  @@unique([id, name])
+}
+
+model LinkVote {
+  userPublicProfileId String
+  userPublicProfile UserPublicProfile @relation(fields: [userPublicProfileId], references: [id])
+  linkId String
+  link Link @relation(fields: [linkId], references: [id])
+  upVote Boolean
+
+  @@id([userPublicProfileId, linkId])
+}
+
+model Link {
+  id        String   @id
+  submittedByUserPublicProfileId String
+  submittedByUserPublicProfile UserPublicProfile @relation("LinkSubmittedByUserPublicProfiles", fields: [submittedByUserPublicProfileId], references: [id])
+  submittedAtUTC DateTime
+  url String
+  title String
+  summary String?
+  upVotedByUserPublicProfiles LinkVote[]
+  upVoteCount Int
+  downVoteCount Int
+  tags Tag[]
+}
+
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
