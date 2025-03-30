@@ -1,13 +1,10 @@
 
 'use client'
 
-import { SignInModal } from "@/app/[lng]/_components/signin/SignInModal";
 import { useTranslation } from "@/app/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { useStore } from "@/lib/store/store";
-import { Sign } from "crypto";
 import { use, useEffect, useState, useRef } from "react";
-import { useShallow } from "zustand/react/shallow";
 import QuestionItem from "./QuestionItem";
 
 export type QuestionsProps = {
@@ -30,7 +27,6 @@ export default function ({lng, eventId} : QuestionsProps) {
     const [isFocused, setIsFocused] = useState(false);
     const [showAskQuestion, setShowAskQuestion] = useState(false);
     const [buttonHoverColor, setButtonHoverColor] = useState('black');
-    const [showSignInModal, setShowSignInModal] = useState(false);
     const [showNotification, setShowNotification] = useState(false);
 
     const { 
@@ -62,7 +58,7 @@ export default function ({lng, eventId} : QuestionsProps) {
 
     const showQuestionInput = () => {
       if (!session) {
-        setShowSignInModal(true)
+        // setShowSignInModal(true)
         return
       }
       setShowAskQuestion(true);
@@ -78,7 +74,6 @@ export default function ({lng, eventId} : QuestionsProps) {
 
       return (
         <div className="w-full">
-          <SignInModal lng={lng} showSignInModal={showSignInModal} message={t('sign_in_to_ask_a_question')} onClose={() => setShowSignInModal(false)} />
           <div>
           <div className="flex justify-center mt-4">
             <button 
@@ -129,19 +124,12 @@ export default function ({lng, eventId} : QuestionsProps) {
 
           <div>
             <h2>{t('Pending Questions')}</h2>
-            {questions.filter(question => !question.answer).map((question) => (
+            {questions.map((question) => (
               <QuestionItem key={question.id} question={question} lng={lng} />
             ))}
           </div>
 
           <div>
-    <h2>{t('Answered Questions')}</h2>
-    {questions.filter(question => question.answer).map((question) => (
-      <div key={question.id}>
-        <p className="font-bold">{question.question}</p>
-        <p>{question.answer}</p>
-      </div>
-    ))}
   </div>
 
 

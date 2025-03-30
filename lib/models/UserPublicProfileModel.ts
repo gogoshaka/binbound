@@ -1,9 +1,15 @@
 'use server'
 import { headers } from 'next/headers';
 import { auth } from '../auth';
-import { PrismaClient, UserPublicProfile } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
+// @ts-ignore
+import { UserPublicProfile as UserPublicProfileType } from '@prisma/client';
 
-export const createUserPublicProfileIfNotExists = async () : Promise<{status: 200 | 401, data?: UserPublicProfile}>  => {
+// @ts-ignore
+const userPublicProfileValidator = Prisma.validator<Prisma.UserPublicProfileDefaultArgs>()
+  
+
+export const createUserPublicProfileIfNotExists = async () : Promise<{status: 200 | 401, data?: UserPublicProfileType}>  => {
     const session = await auth.api.getSession({ headers: await headers() })
     if (!session) {
         return {

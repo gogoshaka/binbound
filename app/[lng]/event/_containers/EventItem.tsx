@@ -1,6 +1,5 @@
 import { auth } from '@/lib/auth';
 import { useTranslation } from '../../../i18n';
-import { PrismaClient, Event } from '@prisma/client';
 import Link from 'next/link';
 import { RegisterForEvent } from './RegisterForEvent';
 import { headers } from 'next/headers';
@@ -12,10 +11,11 @@ import SocialIconYoutube from '../../_components/social/Youtube';
 import SocialIconGithub from '../../_components/social/Github';
 import {EventTime} from './EventTime'
 import routes from '@/lib/routes';
+import * as EventModel from '@/lib/models/EventModel';
 
 
 
-export async function EventItem({ lng, event}: {event: Event, lng: string}) {
+export async function EventItem({ lng, event}: {event: EventModel.EventWithGuestsType, lng: string}) {
     const { t } = await useTranslation(lng, 'ama');
     /*
     const { events, eventsRegisteredByUser } = useStore((state) => ({
@@ -39,7 +39,7 @@ export async function EventItem({ lng, event}: {event: Event, lng: string}) {
             <div className='flex-grow text-justify'>
                 <div className="text-md font-bold uppercase mb-2">{event.title}</div>
                 <div className='flex flex-col md:flex-row space-y-2'>
-                {event.guests.map((guest, index) => (
+                {event.guests.map((guest: any, index: number) => (
                         <div key={index} className='flex flex-col space-x-2 text-md'>
                             <div className="">
                                 {guest.userPublicProfile.name}, 

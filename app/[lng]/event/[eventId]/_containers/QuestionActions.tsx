@@ -5,7 +5,6 @@ import { SignInModal } from "@/app/[lng]/_components/signin/SignInModal";
 import { useTranslation } from "@/app/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { useStore } from "@/lib/store/store";
-import { Question } from "@prisma/client";
 import { Sign } from "crypto";
 import { use, useEffect, useState, useRef } from "react";
 import { useShallow } from "zustand/react/shallow";

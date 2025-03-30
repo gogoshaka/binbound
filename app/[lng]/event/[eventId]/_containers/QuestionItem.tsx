@@ -1,18 +1,12 @@
 
 
-import { SignInModal } from "@/app/[lng]/_components/signin/SignInModal";
 import { useTranslation } from "@/app/i18n/client";
-import { authClient } from "@/lib/auth-client";
-import { useStore } from "@/lib/store/store";
-import { Question } from "@prisma/client";
-import { Sign } from "crypto";
-import { use, useEffect, useState, useRef } from "react";
-import { useShallow } from "zustand/react/shallow";
 import QuestionActions from "./QuestionActions";
+import * as EventModel from "@/lib/models/EventModel";
 
 export type QuestionProps = {
     lng: string;
-    question: Question;
+    question: EventModel.QuestionWithaskedByUserPublicProfileType;
 };
 export default function ({lng, question} : QuestionProps) {
     const { t } = useTranslation(lng, 'ama');

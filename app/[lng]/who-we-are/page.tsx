@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 
 
-export default function IndexPage({ params: { lng } }: {
-  params: {
-    lng: string;
-  };
-}) {
+type Params =  Promise<{ lng: string }>
+export default async function WhoWeAre(props: { params: Params }) {
+  const params = await props.params;
+  const { lng } = params
   return (
     <div>Who we are</div>
   

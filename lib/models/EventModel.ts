@@ -2,7 +2,7 @@
 
 'use server'
 
-import { PrismaClient, Prisma, Event } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { headers } from 'next/headers'
 import { auth } from '../auth'
 import { redirect } from 'next/dist/server/api-utils'
@@ -11,13 +11,23 @@ import { get } from 'http'
 
 const prisma = new PrismaClient()
 
-// 1: Define a type that includes the relation to `Post`
-const eventWithGuests = Prisma.validator<Prisma.EventDefaultArgs>()({
+// @ts-ignore
+const eventWithGuestsValidator = Prisma.validator<Prisma.EventDefaultArgs>()({
   include: { guests: {include : {userPublicProfile : true}} },
 })
+// @ts-ignore
+const eventValidator = Prisma.validator<Prisma.EventDefaultArgs>()
+// @ts-ignore
+const questionWithaskedByUserPublicProfileValidator = Prisma.validator<Prisma.QuestionDefaultArgs>()({
+  include: { askedByUserPublicProfile: true },
+})
 
-// 3: This type will include a user and all their posts
-export type EventWithGuestsType = Prisma.EventGetPayload<typeof eventWithGuests>
+// @ts-ignore
+export type EventWithGuestsType = Prisma.EventGetPayload<typeof eventWithGuestsValidator>
+// @ts-ignore
+export type QuestionWithaskedByUserPublicProfileType = Prisma.QuestionGetPayload<typeof questionWithaskedByUserPublicProfileValidator>
+// @ts-ignore
+export type EventType = Prisma.EventGetPayload<typeof eventValidator>
 
 export async function getEvents() : Promise<EventWithGuestsType[]> {
   const events = await prisma.event.findMany({
@@ -111,7 +121,7 @@ export async function getEventsRegisteredByUserPublicProfile() {
     });
     return {
         status: 200,
-        data: userPublicProfile?.registeredEvents.map(registeredEvent => registeredEvent.id) || []
+        data: userPublicProfile?.registeredEvents.map((registeredEvent: EventType) => registeredEvent.id) || []
     }
   }
 

@@ -1,18 +1,53 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+name: Build and Deploy
+
+on:
+  tags:
+    - 'v*'  # Trigger the workflow on Git tags starting with "v"
+
 jobs:
-  Explore-GitHub-Actions:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      # Step 2: Set Docker Image Tag
+      - name: Set Docker Image Tag
+        id: vars
         run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+          if [ "${{ github.event_name }}" == "push" ]; then
+            if [ "${{ github.ref_type }}" == "tag" ]; then
+              echo "IMAGE_TAG=${{ github.ref_name }}" >> $GITHUB_ENV
+            else
+              echo "IMAGE_TAG=latest" >> $GITHUB_ENV
+            fi
+          else
+            echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+
+      # Step 3: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # Step 4: Build the Docker image
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/binboundapp:${{ env.IMAGE_TAG }} .
+      
+      # Step 4: Push the Docker image to Docker Hub
+      - name: Push Docker Image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/binboundapp:${{ env.IMAGE_TAG }}
+
+      # Step 6: Deploy to Production
+      - name: Deploy to Production
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USER }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/binboundapp:${{ env.IMAGE_TAG }}
+            docker-compose up -d

@@ -9,11 +9,12 @@ export default async function IndexPage(props: { params: Params }) {
   const { lng } = params
     return (
         <div className="flex flex-col items-center justify-center h-screen">
-            <SignIn lng={lng} /> 
+            <SignIn lng={lng} message={''} /> 
         </div> 
     )  
            
 }
 
 
+ 
  

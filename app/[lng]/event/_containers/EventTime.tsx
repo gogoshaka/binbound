@@ -1,10 +1,10 @@
 'use server'
-import { Event } from '@prisma/client';
 import { useTranslation } from '../../../i18n';
+import * as EventModel from "@/lib/models/EventModel";
 
 
 
-export const EventTime = async ({ lng, event }: { lng: string, event: Event }) => {
+export const EventTime = async ({ lng, event }: { lng: string, event: EventModel.EventWithGuestsType }) => {
 
     const { t } = await useTranslation(lng, 'ama');
     const visitorTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;

@@ -3,11 +3,10 @@ import { useShallow } from 'zustand/react/shallow'
 import { useStore } from "@/lib/store/store";
 import { useTranslation } from "@/app/i18n/client";
 import { RegisterForEvent } from './RegisterForEvent';
-import { JoinTheEvent } from './JoinTheEvent';
-import { Event } from '@prisma/client';
-import Link from 'next/link';
+import * as EventModel from "@/lib/models/EventModel";
 
-export function UserActionOnEvent({ lng, event}: {event: Event, lng: string}) {
+
+export function UserActionOnEvent({ lng, event}: {event: EventModel.EventWithGuestsType, lng: string}) {
     const { t } = useTranslation(lng, 'ama');
     const { eventsRegisteredByUser } = useStore(useShallow((state) => ({
         eventsRegisteredByUser: state.eventsRegisteredByUser,

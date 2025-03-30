@@ -1,10 +1,9 @@
-'use server'
 import { LinkItem } from "./_containers/LinkItem";
-import { Link as LinkType } from '@prisma/client';
 import * as LinkModel from "@/lib/models/LinkModel"
 import { ClientSetLinksInStore } from './_containers/ClientSetLinksInStore';
 
-
+// see with API, it's sthe same issue: https://blog.jonrshar.pe/2024/Dec/24/nextjs-prisma-docker.html
+export const dynamic = "force-dynamic"; // use it otherwise docker compose will fail because it tries tro pre-render this page and fails because postgresl server is not reachable. see: https://github.com/prisma/prisma/discussions/14187
 
 type Params =  Promise<{ lng: string }>
 export default async function Links(props: { params: Params }) {
@@ -29,7 +28,7 @@ export default async function Links(props: { params: Params }) {
     return (
         <div>
         <div className="mt-10">
-        {links.map((link: LinkType, index: number) => (
+        {links.map((link: LinkModel.LinkWithSubmittedByUserPublicProfileType, index: number) => (
           <LinkItem 
             key={index} 
             link={link} 

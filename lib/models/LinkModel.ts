@@ -11,7 +11,7 @@ import { get } from 'http'
 
 const prisma = new PrismaClient()
 
-// 1: Define a type that includes the relation to `Post`
+// @ts-ignore
 const linkWithSubmittedByUserPublicProfile = Prisma.validator<Prisma.LinkDefaultArgs>()({
   include: { 
     submittedByUserPublicProfile: true,
@@ -19,7 +19,7 @@ const linkWithSubmittedByUserPublicProfile = Prisma.validator<Prisma.LinkDefault
   },
 })
 
-// 3: This type will include a user and all their posts
+// @ts-ignore
 export type LinkWithSubmittedByUserPublicProfileType = Prisma.LinkGetPayload<typeof linkWithSubmittedByUserPublicProfile>
 
 export async function getLinks() : Promise<{status: 200 | 404, data?: LinkWithSubmittedByUserPublicProfileType[]}> {

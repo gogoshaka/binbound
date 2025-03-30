@@ -10,10 +10,10 @@ import { createGlobalSlice, GlobalSlice } from "./slices/global-slice";
 // ...
 
 // 1) Build an overall Store type
-export type Store = EventSlice  & LinkSlice & GlobalSlice // & InsuranceSlice /* ...more slices */;
+export type StoreType = EventSlice  & LinkSlice & GlobalSlice // & InsuranceSlice /* ...more slices */;
 
 // 2) Actually create the store
-export const useStore = create<Store>()(
+export const useStore = create<StoreType>()(
   devtools(
       subscribeWithSelector(
         immer((...args) => ({

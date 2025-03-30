@@ -4,9 +4,9 @@
 
 import { useEffect } from 'react';
 import { useStore } from '@/lib/store/store';
-import { Event } from '@prisma/client';
 
-export default function ClientSetEventsInStore({events} : {events: Event[]}) {
+import * as EventModel from '@/lib/models/EventModel';
+export default function ClientSetEventsInStore({events} : {events: EventModel.EventWithGuestsType[]}) {
   const { setInitialEvents, hydrateEventsRegisteredByUser } = useStore((state) => ({
     setInitialEvents: state.setInitialEvents,
     hydrateEventsRegisteredByUser: state.hydrateEventsRegisteredByUser,

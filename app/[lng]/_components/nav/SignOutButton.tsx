@@ -50,7 +50,7 @@ export const SignOutButton = ({ lng}: { lng: string }) => {
                         <button onClick={closeSignInModal} className="absolute top-2 right-2">
                             &times;
                         </button>
-                        <SignIn lng={lng}/>
+                        <SignIn lng={lng} message={''}/>
                     </div>
                 </div>
             )}

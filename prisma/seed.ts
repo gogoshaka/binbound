@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 async function createLinks() {
     const links: any[] = [];
     return new Promise<void>((resolve, reject) => {
-        fs.createReadStream('/Users/gogo/projects/semanticmaker/nextjs/prisma/seed/Link.csv')
+        fs.createReadStream('/Users/gogo/projects/binbound/binbound/prisma/seed/Link.csv')
             .pipe(csv())
             .on('data', (row) => {
                 links.push({
@@ -70,7 +70,7 @@ async function createLinks() {
 async function createAnswers() {
     const answers: any[] = [];
     return new Promise<void>((resolve, reject) => {
-        fs.createReadStream('/Users/gogo/projects/semanticmaker/nextjs/prisma/seed/Answer.csv')
+        fs.createReadStream('/Users/gogo/projects/binbound/binbound/prisma/seed/Answer.csv')
             .pipe(csv())
             .on('data', (row) => {
                 answers.push({
@@ -112,7 +112,7 @@ async function createAnswers() {
 async function createQuestions() {
     const questions: any[] = [];
     return new Promise<void>((resolve, reject) => {
-        fs.createReadStream('/Users/gogo/projects/semanticmaker/nextjs/prisma/seed/Question.csv')
+        fs.createReadStream('/Users/gogo/projects/binbound/binbound/prisma/seed/Question.csv')
             .pipe(csv())
             .on('data', (row) => {
                 questions.push({
@@ -167,7 +167,7 @@ async function createQuestions() {
 async function createGuests() {
     const guests: any[] = [];
     return new Promise<void>((resolve, reject) => {
-        fs.createReadStream('/Users/gogo/projects/semanticmaker/nextjs/prisma/seed/Guest.csv')
+        fs.createReadStream('/Users/gogo/projects/binbound/binbound/prisma/seed/Guest.csv')
             .pipe(csv())
             .on('data', (row) => {
                 guests.push({
@@ -215,7 +215,7 @@ async function createGuests() {
 async function createEvents() {
     const events: any[] = [];
     return new Promise<void>((resolve, reject) => {
-        fs.createReadStream('/Users/gogo/projects/semanticmaker/nextjs/prisma/seed/Event.csv')
+        fs.createReadStream('/Users/gogo/projects/binbound/binbound/prisma/seed/Event.csv')
             .pipe(csv())
             .on('data', (row) => {
                 events.push({
@@ -253,7 +253,7 @@ async function createEvents() {
 async function createUsers() {
     const users: any[] = [];
     return new Promise<void>((resolve, reject) => {
-    fs.createReadStream('/Users/gogo/projects/semanticmaker/nextjs/prisma/seed/User.csv')
+    fs.createReadStream('/Users/gogo/projects/binbound/binbound/prisma/seed/User.csv')
         .pipe(csv())
         .on('data', (row) => {
             users.push({

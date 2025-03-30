@@ -31,7 +31,7 @@ export async function LinkItem({ lng, link }: LinkItemProps) {
           <span className='text-justify'>{link.summary}</span>
         </div>
         <div className="flex flex-wrap mt-2">
-          {link.tags.map((tag, index) => (
+          {link.tags.map((tag: any, index: number) => (
             <span key={index} className="text-gray-500 text-md mr-1" style={{ fontFamily: 'concourse_c3' }}>
               {tag.id}
             </span>

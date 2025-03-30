@@ -1,13 +1,11 @@
 'use server'
 import { LinkItem } from "./LinkItem";
-import { Link as LinkType } from '@prisma/client';
 import * as LinkModel from "@/lib/models/LinkModel"
 import { ClientSetLinksInStore } from './ClientSetLinksInStore';
 
 
 
-export default async function Links(params:  Promise<{lng: string}> ) {
-    const { lng } = await params;
+export default async function Links({lng} : {lng: string}) {
 
     const res = await LinkModel.getLinks();
     let links : LinkModel.LinkWithSubmittedByUserPublicProfileType[] = []
@@ -28,7 +26,7 @@ export default async function Links(params:  Promise<{lng: string}> ) {
     return (
         <div>
         <div className="mt-10">
-        {links.map((link: LinkType, index: number) => (
+        {links.map((link: LinkModel.LinkWithSubmittedByUserPublicProfileType, index: number) => (
           <LinkItem 
             key={index} 
             link={link} 

@@ -3,10 +3,10 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Link as LinkType} from '@prisma/client';
 import { useStore } from '@/lib/store/store';
+import * as LinkModel from '@/lib/models/LinkModel';
 
-export function ClientSetLinksInStore({links} : {links: LinkType[]}) {
+export function ClientSetLinksInStore({links} : {links: LinkModel.LinkWithSubmittedByUserPublicProfileType[]}) {
   const { setInitialLinks } = useStore((state) => ({
     setInitialLinks: state.setInitialLinks
   }));

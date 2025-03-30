@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow'
 import { EventItem } from "./EventItem";
 import { useStore } from "@/lib/store/store";
+import * as EventModel from "@/lib/models/EventModel";
 
 
 export interface EventsProps {
     lng: string;
-    events: Event[];
+    events: EventModel.EventWithGuestsType[];
 }
 export async function Events(params: Promise<EventsProps>) {
     const { lng, events } = await params;

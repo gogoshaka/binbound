@@ -1,23 +1,13 @@
-import type { Metadata } from "next";
-import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
-import Link from 'next/link';
-import { auth } from '@/lib/auth';
 
-import { headers } from 'next/headers';
 import React from 'react';
-import { PrismaClient, Event } from '@prisma/client';
 
-import { useRef } from 'react';
-import { useTranslation } from '../../i18n';
 
-import { get } from "http";
 import { getEvents } from "@/lib/models/EventModel";
-import { EventItem } from "../event/_containers/EventItem";
-import { Events } from "../event/_containers/Events";
-import ClientSetEventsInStore from "../event/_containers/ClientSetEventsInStore";
-import Links from "../link/page";
+import Links from "../link/_containers/Links";
 
 
+// see with API, it's sthe same issue: https://blog.jonrshar.pe/2024/Dec/24/nextjs-prisma-docker.html
+export const dynamic = "force-dynamic"; // use it otherwise docker compose will fail because it tries tro pre-render this page and fails because postgresl server is not reachable. see: https://github.com/prisma/prisma/discussions/14187
 
 type Params =  Promise<{ lng: string }>
 export default async function IndexPage(props: { params: Params }) {
@@ -76,7 +66,7 @@ return (
 
   </div>
   <div className="mt-10">
-    <Links params={{ lng }} />
+    <Links lng={ lng } />
     
 
     {/* events.map((event, index) => (

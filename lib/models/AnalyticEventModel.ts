@@ -1,5 +1,5 @@
 
-import { PrismaClient, Prisma, AnalyticEvent } from '@prisma/client'
+import { PrismaClient} from '@prisma/client'
 
 import { Searcher, CachePolicy, ISearcher } from 'ts-ip2region';
 

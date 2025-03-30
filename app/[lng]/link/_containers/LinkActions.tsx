@@ -1,16 +1,10 @@
 
 
 'use client'
-import { SignInModal } from "@/app/[lng]/_components/signin/SignInModal";
 import { useTranslation } from "@/app/i18n/client";
 import { LinkWithSubmittedByUserPublicProfileType} from '@/lib/models/LinkModel';
 
-import { authClient } from "@/lib/auth-client";
 import { useStore } from "@/lib/store/store";
-import { Question } from "@prisma/client";
-import { Sign } from "crypto";
-import { use, useEffect, useState, useRef } from "react";
-import { useShallow } from "zustand/react/shallow";
 
 
 export function LinkActions ({lng, link} : {lng: string; link: LinkWithSubmittedByUserPublicProfileType}) {

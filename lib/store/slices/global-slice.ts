@@ -1,8 +1,8 @@
-import { PrismaClient, Link as LinkType } from '@prisma/client';
-import { authClient } from '@/lib/auth-client';
+import { PrismaClient } from '@prisma/client';
 import { StateCreator } from 'zustand';
 import * as LinkModel from '@/lib/models/LinkModel';
-import { get } from 'http';
+import {StoreType} from '@/lib/store/store';
+
 
 const prisma = new PrismaClient();
 
@@ -19,7 +19,7 @@ export type GlobalSlice =
   
   // The slice is a function returning that combined shape
 export const createGlobalSlice: StateCreator<
-    GlobalSlice,
+StoreType,
     [["zustand/devtools", never], ["zustand/subscribeWithSelector", never], ["zustand/immer", never]],
     [],
     GlobalSlice
