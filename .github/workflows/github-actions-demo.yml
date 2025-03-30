@@ -25,6 +25,7 @@ jobs:
             fi
           else
             echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+          fi
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}
 
