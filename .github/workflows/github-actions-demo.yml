@@ -50,6 +50,7 @@ jobs:
           host: ${{ secrets.PRODUCTION_HOST }}
           username: ${{ secrets.PRODUCTION_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          port: ${{ secrets.SSH_PORT}}
           source: ./docker-compose.yml
           target: /home/${{ secrets.PRODUCTION_USER }}/docker-compose.yml
 
@@ -60,6 +61,7 @@ jobs:
           host: ${{ secrets.PRODUCTION_HOST }}
           username: ${{ secrets.PRODUCTION_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          port: ${{ secrets.SSH_PORT}}
           script: |
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
             docker pull ${{ secrets.DOCKER_USERNAME }}/binboundapp:${{ env.IMAGE_TAG }}
