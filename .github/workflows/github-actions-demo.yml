@@ -1,8 +1,9 @@
 name: Build and Deploy
 
 on:
-  tags:
-    - 'v*'  # Trigger the workflow on Git tags starting with "v"
+  push:
+    tags:
+      - 'v*'  # Trigger the workflow on Git tags starting with "v"
 
 jobs:
   build-and-deploy:
