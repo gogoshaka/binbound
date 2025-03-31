@@ -26,6 +26,7 @@ services:
 
   server:
     image: ${DOCKER_USERNAME}/binboundapp:${IMAGE_TAG}
+    container_name: binboundapp
     ports:
       - '3000:3000'
     stdin_open: true
@@ -50,21 +51,24 @@ services:
     container_name: traefik
     restart: always
     command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       - "--certificatesresolvers.myresolver.acme.email=gauthier.lawny@outlook.fr"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - "80:80"    # HTTP
+      - "8080:8080"
       - "443:443"  # HTTPS
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./letsencrypt:/letsencrypt" # For Let's Encrypt certificates
     labels:
-      - "traefik.http.routers.traefik.rule=Host(`traefik.binbound.com`)"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=auth"
       # Middleware for redirecting HTTP to HTTPS
