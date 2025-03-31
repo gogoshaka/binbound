@@ -17,7 +17,7 @@ services:
     expose:
       - 5432
     networks:
-      - prisma-network
+      - database-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
       interval: 5s
@@ -38,7 +38,46 @@ services:
     env_file:
       - .env.production
     networks:
-      - prisma-network
+      - database-network
+      - reverse-proxy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.server.rule=Host(`binbound.com`, `www.binbound.com`)"
+      - "traefik.http.routers.server.entrypoints=websecure"
+      - "traefik.http.routers.server.tls.certresolver=myresolver"
+
+
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
+    restart: always
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=gauthier.lawny@outlook.fr"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"    # HTTP
+      - "443:443"  # HTTPS
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt" # For Let's Encrypt certificates
+    labels:
+      - "traefik.http.routers.traefik.rule=Host(`traefik.binbound.com`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=admin:$apr1$randomhash$hashvalue"
+      # Middleware for redirecting HTTP to HTTPS
+      - "traefik.http.routers.http-catchall.rule=HostRegexp(`{any:.+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=web"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+    networks:
+      - reverse-proxy-network
+
 networks:
-  prisma-network:
+  database-network:
     driver: bridge
