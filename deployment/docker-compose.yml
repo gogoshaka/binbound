@@ -25,9 +25,7 @@ services:
       retries: 20
 
   server:
-    build: 
-      context: .  
-      dockerfile: Dockerfile
+    image: ${{ secrets.DOCKER_USERNAME }}/binboundapp:${{ env.IMAGE_TAG }}
     ports:
       - '3000:3000'
     stdin_open: true
