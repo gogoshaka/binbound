@@ -67,7 +67,7 @@ RUN apk add --no-cache tini
 
 # required to run npm migrate deploy
 RUN npm install --global --save-exact "prisma@$(node --print 'require("./node_modules/@prisma/client/package.json").version')"
-COPY entrydocker.sh /usr/local/bin
+COPY deployment/entrydocker.sh /usr/local/bin
 
 USER nextjs
 
