@@ -25,7 +25,7 @@ services:
       retries: 20
 
   server:
-    image: ${{ secrets.DOCKER_USERNAME }}/binboundapp:${{ env.IMAGE_TAG }}
+    image: ${DOCKER_USERNAME}/binboundapp:${IMAGE_TAG }
     ports:
       - '3000:3000'
     stdin_open: true
