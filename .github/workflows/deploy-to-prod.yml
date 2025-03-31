@@ -52,7 +52,8 @@ jobs:
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            echo "DATABASE_HOSTNAME=${{ secrets.DATABASE_HOSTNAME }}" > /home/${{ secrets.PRODUCTION_USER }}/.env.production
+            echo "BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}" > /home/${{ secrets.PRODUCTION_USER }}/.env.production
+            echo "DATABASE_HOSTNAME=${{ secrets.DATABASE_HOSTNAME }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
             echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
             echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
             echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
