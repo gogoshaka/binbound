@@ -59,24 +59,15 @@ jobs:
             echo "DATABASE_URL=postgresql://${{ secrets.DATABASE_USER }}:${{ secrets.DATABASE_PASSWORD }}@${{ secrets.DATABASE_HOSTNAME }}:5432/postgres?schema=public&connect_timeout=30&pool_timeout=30&socket_timeout=30" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
             chmod 600 /home/${{ secrets.PRODUCTION_USER }}/.env.production
 
-      - name: Transfer Dockerfile to Production
+      # Step 6: Transfer Deployment Directory to Production (includes Dockerfile, docker-compose, ...)
+      - name: Transfer Deployment Directory to Production
         uses: appleboy/scp-action@v0.1.0
         with:
           host: ${{ secrets.PRODUCTION_HOST }}
           username: ${{ secrets.PRODUCTION_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: ./Dockerfile
-          target: /home/${{ secrets.PRODUCTION_USER }}
-
-      - name: Transfer docker-compose.yml to Production
-        uses: appleboy/scp-action@v0.1.0
-        with:
-          host: ${{ secrets.PRODUCTION_HOST }}
-          username: ${{ secrets.PRODUCTION_USER }}
-          key: ${{ secrets.PRODUCTION_SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          source: ./docker-compose.yml
+          source: ./deployment/
           target: /home/${{ secrets.PRODUCTION_USER }}
   
 
@@ -92,4 +83,4 @@ jobs:
           script: |
             echo "${{ secrets.DOCKER_PAT }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
             docker pull ${{ secrets.DOCKER_USERNAME }}/binboundapp:${{ env.IMAGE_TAG }}
-            docker-compose up -d
+            docker-compose --env-file ./env.production up -d
