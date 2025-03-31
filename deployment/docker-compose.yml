@@ -40,7 +40,7 @@ services:
       - reverse-proxy-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.server.rule=Host(`binbound.com`, `www.binbound.com`)"
+      - "traefik.http.routers.server.rule=Host(`binbound.com`)"
       - "traefik.http.routers.server.entrypoints=websecure"
       - "traefik.http.routers.server.tls.certresolver=myresolver"
 
