@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   push:
     tags:
-      - 'v1*'  # Trigger the workflow on Git tags starting with "v"
+      - 'v*'  # Trigger the workflow on Git tags starting with "v"
 
 jobs:
   build-and-deploy:
