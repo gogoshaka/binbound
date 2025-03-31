@@ -81,6 +81,6 @@ services:
 
 networks:
   database-network:
-    driver: bridge
+    name: database-network
   reverse-proxy-network:
-    driver: bridge
+    name: reverse-proxy-network
