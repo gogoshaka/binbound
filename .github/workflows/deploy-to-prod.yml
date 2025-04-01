@@ -57,7 +57,7 @@ jobs:
             echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
             echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
             echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
-            echo "DATABASE_URL=postgresql://${{ secrets.DATABASE_USER }}:${{ secrets.DATABASE_PASSWORD }}@${{ secrets.DATABASE_HOSTNAME }}:5432/postgres?schema=public&connect_timeout=30&pool_timeout=30&socket_timeout=30" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
+            echo "DATABASE_URL=postgresql://${{ secrets.DATABASE_USER }}:${{ secrets.DATABASE_PASSWORD }}@${{ secrets.DATABASE_HOSTNAME }}:5432/${{ secrets.DATABASE_NAME }}?schema=public&connect_timeout=30&pool_timeout=30&socket_timeout=30" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
             chmod 600 /home/${{ secrets.PRODUCTION_USER }}/.env.production
 
       # Step 6: Transfer Deployment Directory to Production (includes Dockerfile, docker-compose, ...)
