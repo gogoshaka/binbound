@@ -53,6 +53,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             echo "BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}" > /home/${{ secrets.PRODUCTION_USER }}/.env.production
+            echo "GITHUB_CLIENT_ID=${{ secrets.GITHUB_CLIENT_ID }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
+            echo "GITHUB_CLIENT_SECRET=${{ secrets.GITHUB_CLIENT_SECRET }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
             echo "DATABASE_HOSTNAME=${{ secrets.DATABASE_HOSTNAME }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
             echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
             echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env.production
