@@ -2,10 +2,13 @@
   "private": true,
   "scripts": {
     "dev": "next",
-    "build": "dotenv -e .env.production next build",
-    "start": "next start",
+    "build-prod": "dotenv -e .env.production next build",
+    "build-dev": "NODE_ENV=development dotenv -e .env.local next build",
+    "start": "node .next/standalone/server.js ",
     "deploy-dev": "zsh ./pipelines/deploy-dev.zsh",
     "prisma": "dotenv -c -- prisma",
+    "prisma-dev": "dotenv -e .env.local -- npx prisma generate",
+    "migrate-local": "dotenv -e .env.local -- npx prisma migrate deploy",
     "prebuild": "prisma generate"
   },
   "prisma": {
