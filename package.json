@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "next",
-    "build-prod": "dotenv -e .env.production next build",
+    "build": "dotenv -e .env.production next build",
     "build-dev": "NODE_ENV=development dotenv -e .env.local next build",
     "start": "node .next/standalone/server.js ",
     "deploy-dev": "zsh ./pipelines/deploy-dev.zsh",
