@@ -1,0 +1,68 @@
+name: Shared deployment logc stagingg and production
+
+on:
+  workflow_call:
+    inputs:
+      image_tag:
+        required: true
+        type: string
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PAT }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # Step 3: Build and Push Docker Image
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/binboundapp:${{ inputs.image_tag }} -f ./deployment/Dockerfile .
+          docker push ${{ secrets.DOCKER_USERNAME }}/binboundapp:${{ inputs.image_tag }}
+
+      # Step 4: Create .env File on Server
+      - name: Create .env File on Server
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ env.HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            echo "BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}" > /home/${{ secrets.PRODUCTION_USER }}/.env
+            echo "GITHUB_CLIENT_ID=${{ secrets.GGITHUB_CLIENT_ID }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env
+            echo "GITHUB_CLIENT_SECRET=${{ secrets.GGITHUB_CLIENT_SECRET }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env
+            echo "DATABASE_HOSTNAME=${{ secrets.DATABASE_HOSTNAME }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env
+            echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env
+            echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env
+            echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> /home/${{ secrets.PRODUCTION_USER }}/.env
+            echo "DATABASE_URL=postgresql://${{ secrets.DATABASE_USER }}:${{ secrets.DATABASE_PASSWORD }}@${{ secrets.DATABASE_HOSTNAME }}:5432/${{ secrets.DATABASE_NAME }}?schema=public&connect_timeout=30&pool_timeout=30&socket_timeout=30" >> /home/${{ secrets.PRODUCTION_USER }}/.env
+            chmod 600 /home/${{ secrets.PRODUCTION_USER }}/.env
+
+      # Step 5: Transfer Deployment Directory to Server
+      - name: Transfer Deployment Directory to Server
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ env.HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: ./deployment/
+          target: /home/${{ secrets.SSH_USER }}
+
+      # Step 6: Deploy to Server
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ env.HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            echo "${{ secrets.DOCKER_PAT }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            docker pull ${{ secrets.DOCKER_USERNAME }}/binboundapp:${{ inputs.image_tag }}
+            IMAGE_TAG=${{ inputs.image_tag }} DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} DEPLOYMENT_HOST=${{env.HOST}} docker-compose -f ./deployment/docker-compose.yml --env-file ./.env up -d

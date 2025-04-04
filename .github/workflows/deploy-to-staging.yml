@@ -1,0 +1,13 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/shared_deployment_logic.yml
+    with:
+      environment: staging
+      image_tag: staging-${{ github.sha }}
