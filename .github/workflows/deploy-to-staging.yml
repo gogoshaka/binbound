@@ -7,8 +7,22 @@ on:
 
 jobs:
   deploy:
+    environment: staging 
     uses: ./.github/workflows/shared_deployment_logic.yml
     with:
       image_tag: staging-${{ github.sha }}
-      environment: staging
-    secrets: inherit
+    secrets:
+      DOCKER_PAT: ${{ secrets.DOCKER_PAT }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+      GGITHUB_CLIENT_ID: ${{ secrets.GGITHUB_CLIENT_ID }}
+      GGITHUB_CLIENT_SECRET: ${{ secrets.GGITHUB_CLIENT_SECRET }}
+      DATABASE_HOSTNAME: ${{ secrets.DATABASE_HOSTNAME }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      DATABASE_USER: ${{ secrets.DATABASE_USER }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+    env:
+      PRODUCTION_HOST: ${{ variables.HOST }}
