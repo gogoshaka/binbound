@@ -11,5 +11,4 @@ jobs:
     with:
       image_tag: staging-${{ github.sha }}
       environment: staging 
-    secrets:
-      inherit: true
+    secrets: inherit
