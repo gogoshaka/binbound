@@ -86,3 +86,11 @@ networks:
   reverse-proxy-network:
     driver: bridge
     name: reverse-proxy-network
+  
+volumes:
+  pgdata:
+    driver: local
+    name: pgdata
+  letsencrypt:
+    driver: local
+    name: letsencrypt
