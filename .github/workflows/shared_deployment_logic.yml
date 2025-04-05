@@ -6,6 +6,8 @@ on:
       image_tag:
         required: true
         type: string
+      environment: 
+        name: ${{ inputs.environment }}
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
