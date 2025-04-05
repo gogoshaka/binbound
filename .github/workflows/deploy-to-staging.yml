@@ -7,7 +7,6 @@ on:
 
 jobs:
   deploy:
-    environment: staging 
     uses: ./.github/workflows/shared_deployment_logic.yml
     with:
       image_tag: staging-${{ github.sha }}
