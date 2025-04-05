@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     env_file:
-      - ../.env.production
+      - ../.env
     ports:
       - '5432:5432'
     expose:
@@ -35,13 +35,13 @@ services:
       postgresdb:
         condition: service_healthy
     env_file:
-      - ../.env.production
+      - ../.env
     networks:
       - database-network
       - reverse-proxy-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.server.rule=Host(`binbound.com`)"
+      - "traefik.http.routers.server.rule=Host(`${DEPLOYMENT_HOST}`)"
       - "traefik.http.routers.server.entrypoints=websecure"
       - "traefik.http.routers.server.tls.certresolver=myresolver"
       - "traefik.docker.network=reverse-proxy-network"
