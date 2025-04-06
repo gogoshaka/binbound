@@ -9,6 +9,6 @@ jobs:
   deploy:
     uses: ./.github/workflows/shared_deployment_logic.yml
     with:
-      image_tag: staging-${{ github.sha }}
+      image_tag: main
       environment: staging 
     secrets: inherit
