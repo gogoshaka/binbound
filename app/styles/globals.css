@@ -3,7 +3,7 @@
 
 @import "tailwindcss";
 
-@import url('./val.light.css');
+@import "./val.light.css";
 
 @theme {  
   --color-activestone: #a8a29e,

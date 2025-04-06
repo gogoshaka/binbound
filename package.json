@@ -2,8 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "next",
-    "build": "dotenv -e .env.production next build",
-    "build-dev": "dotenv -e .env.local next build",
+    "build": "next build",
     "start": "node .next/standalone/server.js ",
     "deploy-dev": "zsh ./pipelines/deploy-dev.zsh",
     "prisma": "dotenv -c -- prisma",
